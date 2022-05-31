@@ -1,0 +1,14 @@
+html {
+
+}
+body {
+  background-color: rgb(150,150,150);
+
+}
+.main{
+  display: block;
+  width: 100vmin;
+  margin: auto;
+  height: 100vmin;
+  background-color: rgb(250,250,250);
+}

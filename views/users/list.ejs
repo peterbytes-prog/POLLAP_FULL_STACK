@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <%- include('../header'); -%>
+  <body>
+    <div class="container bg-white py-4">
+      <h3>Users</h3>
+      <ul class='list-group'>
+        <% for(let user of users) { %>
+          <li class='list-group-item'>
+            <div class="container">
+              Username: <%= user.username %> <br>
+              First Name: <%= user.firstname %><br>
+              Last Name: <%= user.lastname %><br>
+              Gender: <%= user.gender %><br>
+              Age: <%= user.age %><br>
+              Email: <%= user.email %>
+            </div>
+            <div class="container text-right">
+              <a class="page-link d-inline text-warning px-2" href="/users/edit/<%=user._id %>">Edit</a>
+              <a class="page-link d-inline text-danger px-2" href="/users/delete/<%=user._id %>">Delete</a>
+            </div>
+
+          </li>
+        <% } %>
+
+      </ul>
+    </div>
+  </body>
+  <%- include('../footer'); -%>
+</html>
