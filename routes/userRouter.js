@@ -1,6 +1,6 @@
 const express = require('express');
 const router =  express.Router();
-
+const authenticators = require('../middlewares/authenticate');
 const User = require("../models/user.js");
 
 const mongoose = require('mongoose');
@@ -12,7 +12,37 @@ const connect = mongoose.connect(
 router.get("/", async (req, res)=>{
   const users = await User.find({});
   res.render('users/list', { users });
-})
+});
+
+router.get("/login", async (req, res)=>{
+  const users = await User.find({});
+  const username = req.username || "";
+  const password = req.password || "";
+  res.render('users/login', { username, password });
+});
+router.post("/login", async (req, res)=>{
+  const users = await User.find({});
+  const username = req.body.username || "";
+  const password = req.body.password || "";
+
+  User.findOne({username:username, password:password})
+  .then((user)=>{
+    if(user){
+      req.session.userId = user.id;
+      res.redirect('/');
+    }else{
+      res.render('users/login', { username, password });
+    }
+
+  }, (err)=>{
+    res.render('users/login', { username, password });
+  })
+});
+
+router.get("/logout", async (req, res)=>{
+  req.session.destroy(()=>res.redirect('/'));
+});
+
 router.get("/create", (req, res)=>{
   res.render('users/create', {user:{}});
 })
@@ -26,9 +56,7 @@ router.post("/create", async (req, res)=>{
   data.firstname = req.body.firstname;
   data.lastname = req.body.lastname;
   data.age = req.body.age;
-  if (
-      (data.email)
-      && (data.username)
+  if ((data.username)
       && (req.body.password1)
       && (req.body.password1 === req.body.password2)
     ){

@@ -18,8 +18,10 @@
               <% } %>
             </ul>
             <div class="container text-right">
-              <a class="page-link d-inline text-warning px-2" href="/polls/edit/<%=question._id %>">Edit</a>
-              <a class="page-link d-inline text-danger px-2" href="/polls/delete/<%=question._id %>">Delete</a>
+              <% if(question.userid == loggedIn){%>
+                <a class="page-link d-inline text-warning px-2" href="/polls/edit/<%=question._id %>">Edit</a>
+                <a class="page-link d-inline text-danger px-2" href="/polls/delete/<%=question._id %>">Delete</a>
+              <%}%>
             </div>
           </div>
         </form>

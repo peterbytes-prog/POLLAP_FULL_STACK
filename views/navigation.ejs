@@ -5,5 +5,11 @@
     <a href="/polls/create">Create Polls</a>
     <a href="/users">Users</a>
     <a href="/users/create">Sign Up</a>
+    <% if (loggedIn) { %>
+      <a href="/users/logout">Logout</a>
+    <% }else{ %>
+      <a href="/users/login">Login</a>
+    <% } %>
+
   </nav>
 </div>

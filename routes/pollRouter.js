@@ -1,5 +1,6 @@
 const express = require('express');
 const { Choice, Question, Vote } = require('../models/poll');
+const authenticators = require("../middlewares/authenticate");
 const util = require('util')
 const User = require('../models/user');
 const router = express.Router();
@@ -22,7 +23,7 @@ router.get('/', async (req, res)=>{
 });
 
 
-router.get('/delete/:id', async (req, res)=>{
+router.get('/delete/:id', authenticators.loginRequired, authenticators.isPollOwner, async (req, res)=>{
   const question =  Question.findById(req.params.id).populate('choices');
 
   question.then(async(question)=>{
@@ -37,7 +38,7 @@ router.get('/delete/:id', async (req, res)=>{
 
 });
 
-router.post('/delete/:id', async (req, res)=>{
+router.post('/delete/:id', authenticators.loginRequired, authenticators.isPollOwner, async (req, res)=>{
   const question =  Question.findById(req.params.id);
   question.then(async(question)=>{
       question.remove()
@@ -50,14 +51,14 @@ router.post('/delete/:id', async (req, res)=>{
 
 });
 
-
 router
-.get('/edit/:id', async (req, res)=>{
+.get('/edit/:id', authenticators.loginRequired, authenticators.isPollOwner,async (req, res)=>{
   const question = await Question.findById(req.params.id).populate('choices');
   // const choices = await Choice.find({questionid:req.params.id}).populate('votes');
   res.render('polls/edit', { question })
 });
-router.post('/edit/:id', async (req, res)=>{
+
+router.post('/edit/:id', authenticators.loginRequired, authenticators.isPollOwner , async (req, res)=>{
 
   console.log(req.body);
   const question = await Question.findById(req.params.id).populate('choices');
@@ -118,15 +119,12 @@ router.post('/edit/:id', async (req, res)=>{
 
 })
 
-
-
-
 router.get('/details/:id', async (req, res)=>{
   const question = await Question.findById(req.params.id).populate('choices');
   const choices = await Choice.find({questionid:req.params.id}).populate('votes');
   res.render('polls/detail', { question })
 });
-router.post('/details/:id', async (req, res)=>{
+router.post('/details/:id', authenticators.loginRequired, async (req, res)=>{
   const user = await User.findOne({username:"udosamuel"});
   let v = {
             userid:user._id,
@@ -153,12 +151,13 @@ router.post('/details/:id', async (req, res)=>{
 });
 
 
-router.get('/create',(req, res)=>{
+router.get('/create',authenticators.loginRequired, (req, res)=>{
     res.render('polls/create');
 });
 
-router.post('/create',async (req, res)=>{
+router.post('/create',authenticators.loginRequired, async (req, res)=>{
     let q = req.body.question_text || "";
+    req.body.userid = req.session.userId;
     if(q.length >=3 ){
       const question = Question.create(req.body);
       question

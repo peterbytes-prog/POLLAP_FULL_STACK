@@ -10,7 +10,9 @@
   "author": "snipersenpai",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "express": "^4.18.1",
+    "express-session": "^1.17.3",
     "mongoose": "^6.3.5"
   },
   "devDependencies": {

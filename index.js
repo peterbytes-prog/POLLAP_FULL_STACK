@@ -1,8 +1,17 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+const expressSession = require('express-session');
 const path = require('path');
 const fs = require('fs');
 const app = express();
+global.loggedIn = null;
 app.set('view engine', 'ejs');
+app.use(expressSession({
+  secret: 'pollapp123'
+}))
+app.use(express.json());
+app.use(express.urlencoded())
+app.use(express.static('public'));
 
 const userRouter = require('./routes/userRouter');
 const pollRouter = require("./routes/pollRouter");
@@ -14,12 +23,14 @@ function templates(name=null){
   }
   return t;
 }
-app.use(express.json());
-app.use(express.urlencoded())
-app.use(express.static('public'));
+
 
 app.listen(3000, ()=>{
   console.log("App Listening on port 3000");
+});
+app.use('*', (req, res, next)=>{
+    loggedIn = req.session.userId;
+    next()
 });
 app.get("/", (req, res)=>{
   res.render('index');
