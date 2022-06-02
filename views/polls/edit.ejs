@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <%- include('../header'); -%>
+  <body>
+    <%- include('../navigation'); -%>
+    <div class="container bg-white pb-5">
+      <div class="container">
+        <form class="" action="/polls/edit/<%= question._id %>" method="post">
+          <div class="row">
+            <div class="col-sm-12 col-md-4 bg-light">
+              <h3>Question</h3>
+              <div class="container">
+                <div class="form-group">
+                  <label for="question">Question</label>
+                  <textarea name="question_text" rows="4" ><%= question.question_text %></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-8 bg-white">
+              <h3>CHOICES</h3>
+              <div class="container">
+                  <div class="form-group">
+                    <label for="question">Choices</label>
+
+                    <% for( let i=1; i<=4; i++) { %>
+                      <% if(i<=question.choices.length){ %>
+
+                        <div class="form-group">
+                          <label for=""><%= ['A', 'B', 'C', 'D'][i-1] %>).</label>
+                          <input type="text" name="<%= question.choices[i-1]._id %>" value="<%= question.choices[i-1].choice_text %>" class="form-control">
+                        </div>
+
+                    <% }else{ %>
+
+                        <div class="form-group">
+                          <label for=""><%= ['A', 'B', 'C', 'D'][i-1] %>).</label>
+                          <input type="text"  name="choice_text" value="" class="form-control">
+                        </div>
+
+                    <% } %>
+
+                    <% } %>
+
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="container text-center">
+            <button class='btn btn-success px-4 py-2'  type="submit" name="button">Update</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+  </body>
+  <%- include('../footer'); -%>
+</html>

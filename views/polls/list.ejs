@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <%- include('../header'); -%>
+  <body>
+    <%- include('../navigation'); -%>
+    <div class="container bg-white py-4">
+      <h3>Polls</h3>
+      <ul class='list-group'>
+        <% for(let question of questions) { %>
+          <li class='list-group-item'>
+            <a href="polls/details/<%=question._id %>">
+              <%= question.question_text %> (Votes: <%= question.votes_count %>)
+            </a>
+            <div class="container text-right">
+              <a class="page-link d-inline text-warning px-2" href="/polls/edit/<%=question._id %>">Edit</a>
+              <a class="page-link d-inline text-danger px-2" href="/polls/delete/<%=question._id %>">Delete</a>
+            </div>
+          </li>
+        <% } %>
+
+      </ul>
+    </div>
+  </body>
+  <%- include('../footer'); -%>
+</html>

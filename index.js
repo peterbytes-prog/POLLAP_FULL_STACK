@@ -5,6 +5,7 @@ const app = express();
 app.set('view engine', 'ejs');
 
 const userRouter = require('./routes/userRouter');
+const pollRouter = require("./routes/pollRouter");
 
 function templates(name=null){
   let t = path.resolve(__dirname, 'templates');
@@ -24,6 +25,4 @@ app.get("/", (req, res)=>{
   res.render('index');
 });
 app.use("/users", userRouter);
-app.get("/create", (req, res)=>{
-  res.render('create');
-});
+app.use("/polls", pollRouter);

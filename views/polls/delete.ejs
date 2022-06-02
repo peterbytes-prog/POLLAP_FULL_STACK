@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <%- include('../header'); -%>
+  <body>
+    <%- include('../navigation'); -%>
+    <div class="container bg-white py-4">
+      <h3>Delete Poll <%= question._id %>? </h3>
+      <div class="container">
+        <form class="" href="polls/delete/<%=question._id %>" method="post">
+          <p> <%= question.question_text %> </p>
+          <br>
+          <div class="container">
+            <ul class='list-group'>
+              <% for(let choice of question.choices ) { %>
+                <p class='list-group-item text-left my-1'>
+                  <%= choice.choice_text %> (<%= choice.votes.length %>)
+                </p>
+              <% } %>
+            </ul>
+            <div class="container text-right">
+              <a class="page-link d-inline text-warning px-2" href="/polls/details/<%=question._id %>">Cancel</a>
+              <button type="submit" class="page-link d-inline text-danger px-2">Confirm</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+
+    </div>
+  </body>
+  <%- include('../footer'); -%>
+</html>
