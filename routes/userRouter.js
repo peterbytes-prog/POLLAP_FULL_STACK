@@ -3,13 +3,14 @@ const router =  express.Router();
 const authenticators = require('../middlewares/authenticate');
 const User = require("../models/user.js");
 
-const mongoose = require('mongoose');
-
-const connect = mongoose.connect(
-  "mongodb://localhost/polldb", {useNewUrlParser:true}
-);
+// const mongoose = require('mongoose');
+//
+// const connect = mongoose.connect(
+//   "mongodb://localhost/polldb", {useNewUrlParser:true}
+// );
 
 router.get("/", async (req, res)=>{
+  console.log("User List");
   const users = await User.find({});
   res.render('users/list', { users });
 });
@@ -111,6 +112,5 @@ router.post('/delete/:id', async (req, res)=>{
   }
   res.redirect('/users');
 })
-
 
 module.exports = router;
