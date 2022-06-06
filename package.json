@@ -4,7 +4,7 @@
   "description": "poll application for learning purposes",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 10000 --exit",
+    "test": "mocha --timeout 50000 --exit",
     "start": "nodemon index.js"
   },
   "author": "snipersenpai",

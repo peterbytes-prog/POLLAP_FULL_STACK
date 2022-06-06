@@ -8,10 +8,12 @@ const mongoose = require('mongoose');
 // );
 
 function loginRequired(req, res, next){
-  User.findById(req.session.userId, (err, user)=>{
+  User.findById(req.body.userId, (err, user)=>{
     if(err||!user){
-      res.redirect('/users/login');
+      res.writeHead(401)
+      res.end("Invalid Authentication");
     }else{
+      req.user = user;
       next()
     }
   })

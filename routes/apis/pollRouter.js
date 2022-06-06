@@ -1,11 +1,12 @@
 const express = require('express');
 const { Choice, Question, Vote } = require('../../models/poll');
-const authenticators = require("../../middlewares/authenticate");
+const authenticators = require("../../middlewares/api/authenticate");
 const util = require('util')
 const User = require('../../models/user');
 const router = express.Router();
 
-router.get('/', async (req, res)=>{
+router.get('/', (req, res)=>{
+  console.log('req recieved');
   const questions = Question.find({}).populate('choices').populate('choices.votes');
 
   questions.then(async (questions)=>{
@@ -16,11 +17,65 @@ router.get('/', async (req, res)=>{
       }
       questions[q].votes_count = q_vote_count;
     }
-    res.render('polls/list', {questions});
-  }, (err)=>{console.log(err)})
-  .catch((err)=>{console.log(err)})
+    res.json({questions});
+  }, (err)=>{
+              res.writeHead(500);
+              res.end('Internal Error '+error);
+            })
+  .catch((err)=>{
+    res.writeHead(500)
+    res.end('Internal Error '+error);
+  })
 
 });
+router.put('/', async(req, res)=>{
+  res.writeHead(405);
+  res.end("Delete Not Allow");
+})
+router.delete('/', async(req, res)=>{
+  res.writeHead(405);
+  res.end("Delete Not Allow");
+})
+router.post('/',authenticators.loginRequired, (req, res)=>{
+    let q = req.body.question_text || "";
+    req.body.userid = req.session.userId;
+    if(q.length >=3 ){
+      let _choices = req.body.choice_text || []
+      if(_choices.length<2){
+        res.writeHead(400)
+        return res.end('choice_text[] must be provide and lenth greater than one')
+      }
+      const question = Question.create(req.body);
+      question
+      .then((question)=>{
+        let choice_objects = []
+        for(let c of req.body.choice_text){
+          if(c.length<1){
+            continue
+          }
+          let choice_data = {
+            choice_text: c,
+            questionid: question._id
+          }
+          question.choices.addToSet(choice_data)
+        };
+
+        question.save()
+        .then((question)=>{
+          return res.json({question})
+        }, (err)=>{console.log(err)})
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+    }
+    else{
+      res.writeHead(400)
+      res.end('question text must be greater than 3')
+    }
+});
+
+
 
 
 router.get('/delete/:id', authenticators.loginRequired, authenticators.isPollOwner, async (req, res)=>{
@@ -150,40 +205,9 @@ router.post('/details/:id', authenticators.loginRequired, async (req, res)=>{
 
 });
 
-
 router.get('/create',authenticators.loginRequired, (req, res)=>{
     res.render('polls/create');
 });
 
-router.post('/create',authenticators.loginRequired, async (req, res)=>{
-    let q = req.body.question_text || "";
-    req.body.userid = req.session.userId;
-    if(q.length >=3 ){
-      const question = Question.create(req.body);
-      question
-      .then((question)=>{
-        let choice_objects = []
-        for(let c of req.body.choice_text){
-          if(c.length<1){
-            continue
-          }
-          let choice_data = {
-            choice_text: c,
-            questionid: question._id
-          }
-          // choice_objects.push(choice_data);
-          question.choices.addToSet(choice_data)
-        };
-
-        question.save()
-        .then((question)=>{
-          res.redirect('/polls');
-        }, (err)=>{console.log(err)})
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-    }
-});
 
 module.exports = router;

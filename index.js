@@ -44,7 +44,9 @@ app.get("/", (req, res)=>{
 });
 
 app.use("/api/users", apiUserRouter);
+app.use("/api/polls", apiPollRouter);
 app.use("/users", userRouter);
 app.use("/polls", pollRouter);
+
 
 module.exports = app;

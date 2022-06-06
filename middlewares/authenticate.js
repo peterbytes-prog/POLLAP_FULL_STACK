@@ -16,7 +16,6 @@ function loginRequired(req, res, next){
     }
   })
 }
-
 function isPollOwner(req, res, next){
   Question.findById(req.params.id, (err,poll)=>{
     if(err || !poll || !req.session.userId){

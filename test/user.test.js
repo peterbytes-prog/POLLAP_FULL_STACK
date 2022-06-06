@@ -137,7 +137,6 @@ describe("User / routes", function() {
     .catch((err)=>done(err))
   });
 });
-
 describe("users/sign up methods", function(){
   before(async function(){
     await saveModelBefore();
@@ -277,4 +276,4 @@ describe("users/sign up methods", function(){
       })
     });
   });
-})
+});
