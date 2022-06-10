@@ -8,13 +8,25 @@ const mongoose = require('mongoose');
 // );
 
 function loginRequired(req, res, next){
-  User.findById(req.body.userId, (err, user)=>{
+  let authHeader = req.headers.authorization;
+  if(!authHeader){
+    var err = new Error('You are not authenticated');
+    res.setHeader('WWW-Authenticate', 'Basic');
+    err.status = 401;
+    return next(err);
+  }
+  let auth = new Buffer(authHeader.split(' ')[1], 'base64').toString().split(':');
+  var user= auth[0];
+  var psw = auth[1];
+  User.findOne({username:user, password:psw}, (err, user)=>{
     if(err||!user){
-      res.writeHead(401)
-      res.end("Invalid Authentication");
+      var err = new Error('You are not authenticated');
+      res.setHeader('WWW-Authenticate', 'Basic');
+      err.status = 401;
+      return next(err);
     }else{
       req.user = user;
-      next()
+      return next()
     }
   })
 }

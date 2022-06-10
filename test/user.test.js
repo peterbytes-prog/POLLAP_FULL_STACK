@@ -12,6 +12,10 @@ const testuser2 ={
   username: 'testuser2',
   password:'pwtestuser2'
 }
+let userHash = [
+                  "Basic "+ new Buffer(testuser1.username+':'+testuser1.password).toString('base64'),
+                  "Basic "+ new Buffer(testuser2.username+':'+testuser2.password).toString('base64'),
+                ]
 async function saveModelBefore(){
       User.find({},(err, users)=>{
         models['users'] = users.map((user)=>user.id);

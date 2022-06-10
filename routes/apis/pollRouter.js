@@ -6,7 +6,6 @@ const User = require('../../models/user');
 const router = express.Router();
 
 router.get('/', (req, res)=>{
-  console.log('req recieved');
   const questions = Question.find({}).populate('choices').populate('choices.votes');
 
   questions.then(async (questions)=>{
@@ -38,7 +37,7 @@ router.delete('/', async(req, res)=>{
 })
 router.post('/',authenticators.loginRequired, (req, res)=>{
     let q = req.body.question_text || "";
-    req.body.userid = req.session.userId;
+    req.body.userid = req.user;
     if(q.length >=3 ){
       let _choices = req.body.choice_text || []
       if(_choices.length<2){
@@ -75,139 +74,147 @@ router.post('/',authenticators.loginRequired, (req, res)=>{
     }
 });
 
-
-
-
-router.get('/delete/:id', authenticators.loginRequired, authenticators.isPollOwner, async (req, res)=>{
-  const question =  Question.findById(req.params.id).populate('choices');
-
-  question.then(async(question)=>{
-      let q_vote_count = 0;
-      for(let choice of question.choices){
-        q_vote_count+=choice.votes.length
-      }
-      question.votes_count = q_vote_count;
-      res.render('polls/delete', {question});
-  }, (err)=>{console.log(err)})
-  .catch((err)=>{console.log(err)})
-
-});
-
-router.post('/delete/:id', authenticators.loginRequired, authenticators.isPollOwner, async (req, res)=>{
-  const question =  Question.findById(req.params.id);
-  question.then(async(question)=>{
-      question.remove()
-      .then((question)=>{
-        res.redirect('/polls');
-      }, (err)=>console.log(err))
-
-  }, (err)=>{console.log(err)})
-  .catch((err)=>{console.log(err)})
-
-});
-
-router
-.get('/edit/:id', authenticators.loginRequired, authenticators.isPollOwner,async (req, res)=>{
-  const question = await Question.findById(req.params.id).populate('choices');
-  // const choices = await Choice.find({questionid:req.params.id}).populate('votes');
-  res.render('polls/edit', { question })
-});
-
-router.post('/edit/:id', authenticators.loginRequired, authenticators.isPollOwner , async (req, res)=>{
-
-  console.log(req.body);
-  const question = await Question.findById(req.params.id).populate('choices');
-  let to_remove = [];
-  let query = [];
-  query.push({
-    updateOne:{
-      filter:{id:question.id},
-      update:{question_text:req.body.question_text}
+router.get('/:id', (req, res)=>{
+  Question.findById(req.params.id, (err, question)=>{
+    if(err){
+      res.writeHead(500)
+      return res.end("Error "+ err.message)
     }
-  });
-  for(let choice of question.choices)
-    {
-      if(req.body[choice.id])
-      {
-          let opt = false;
-          opt = {
-                        updateOne:{
-                                    "filter": {id:req.params.id},
-                                    'update': {"choices.$[e].choice_text":req.body[choice.id]},
-                                    "arrayFilters":[{'e._id':choice._id}]
-                                  }
-                        }
-          if(opt){query.push(opt)}
-      }else{
-        to_remove.push(choice.id);
-      }
-    }
-  Question.bulkWrite(query)
-  .then(async (response)=>{
-    const question = await Question.findById(req.params.id).populate('choices');
-    let update = false;
-    req.body.choice_text = req.body.choice_text || [];
-    for(let nw_choice of req.body.choice_text){
-      if(nw_choice.length >=1){
-        let choice_data = {
-          choice_text: nw_choice,
-          questionid: question._id
-        }
-        update = true;
-        question.choices.push(choice_data);
-      }
-
-    }
-    for(let choiceid of to_remove){
-      question.choices.id(choiceid).remove();
-      update = true;
-    }
-    if(update){
-      question.save()
-      .then((question)=>{
-        res.render('polls/edit', { question })
-      }, (err)=>console.error(err))
-    }else{
-      res.render('polls/edit', { question })
-    }
-  }, (err)=>{console.log(err)});
-
+    return res.json({ question })
+  })
 })
+router.put('/:id', authenticators.loginRequired, (req, res)=>{
+  const to_remove = req.body.delete_choices || [];
+  Question.findById(req.params.id, (err, question)=>{
+    if(err){
+      res.writeHead(500);
+      return res.end("Error: "+err.message)
+    }else if(!question){
+      res.writeHead(400)
+      return res.end("Poll macthing query does not exist")
+    }else if(!question.userid.equals(req.user._id)){
+      res.writeHead(401)
+      return res.end("The Poll edit is unauthorize by non creator")
+    }else{
+        let query = [];
+        if(req.body.question_text){
+          query.push({
+            updateOne:{
+              filter:{id:question.id},
+              update:{question_text:req.body.question_text}
+            }
+          });
+        }
 
-router.get('/details/:id', async (req, res)=>{
-  const question = await Question.findById(req.params.id).populate('choices');
-  const choices = await Choice.find({questionid:req.params.id}).populate('votes');
-  res.render('polls/detail', { question })
-});
-router.post('/details/:id', authenticators.loginRequired, async (req, res)=>{
-  const user = await User.findOne({username:"udosamuel"});
-  let v = {
-            userid:user._id,
-            choiceid:req.body.choice
-          };
-  const question = Question.update(
+        for(let choice of question.choices)
+          {
+            if(req.body[choice.id])
+            {
+                let opt = false;
+                opt = {
+                              updateOne:{
+                                          "filter": {id:req.params.id},
+                                          'update': {"choices.$[e].choice_text":req.body[choice.id]},
+                                          "arrayFilters":[{'e._id':choice._id}]
+                                        }
+                              }
+                if(opt){query.push(opt)}
+            }
+          }
+        Question.bulkWrite(query)
+        .then(async (response)=>{
+          const question = await Question.findById(req.params.id).populate('choices');
+          let update = false;
+          req.body.choice_text = req.body.choice_text || [];
+          for(let nw_choice of req.body.choice_text){
+            if(nw_choice.length >=1){
+              let choice_data = {
+                choice_text: nw_choice,
+                questionid: question._id
+              }
+              update = true;
+              question.choices.push(choice_data);
+            }
+          }
+          for(let choiceid of to_remove){
+            question.choices.id(choiceid).remove();
+            update = true;
+          }
+          if(update){
+            question.save()
+            .then((question)=>{
+              return res.send({ question })
+            }, (err)=>{
+              res.writeHead(400)
+              return res.end('Error '+ err.message)
+            })
+          }else{
+            return res.send({ question })
+          }
+        }, (err)=>{
+          res.writeHead(400)
+          return res.end('Error '+ err.message)
+        });
+
+    }
+  })
+})
+router.post('/:id', authenticators.loginRequired, (req, res)=>{
+  v = {
+    userid:req.user,
+    choiceid: req.body.choice_id
+  }
+  Question.updateOne(
     {_id:req.params.id},
     {
-        $addToSet:{
-          'choices.$[e].votes':v
-        },
-
+      $addToSet:{
+        'choices.$[e].votes':v
+      }
     },
-    { arrayFilters: [ { 'e._id': req.body.choice } ], multi: true }
-  )
-  .then(
-          (question) => { res.redirect(`/polls/details/${req.params.id}`)},
-          (err) => {
-                      console.log(err);
-                  }
-  )
-  .catch((err) => console.log(err) )
+    {arrayFilters: [ {'e._id':req.body.choice_id} ], multi: true }
+  ).then((question)=>{
+    Question.findById(req.params.id,(err, question)=>{
+      if(err){
+        res.writeHead(500);
+        return res.end("Error: "+err.message)
+      }else{
+        res.send({question})
+      }
+    })
+  }, (err)=>{
+      res.writeHead(500);
+      return res.end("Error: "+err.message)
+    })
+  .catch((err)=>{
+    res.writeHead(500);
+    return res.end("Error: "+err.message)
+  })
+})
+router.delete('/:id', authenticators.loginRequired, (req, res)=>{
 
-});
+  Question.findById(req.params.id, (err, question)=>{
 
-router.get('/create',authenticators.loginRequired, (req, res)=>{
-    res.render('polls/create');
-});
+    if(err){
+      res.writeHead(500);
+      return res.end("Error: "+err.message)
+    }else if(!question){
+      res.writeHead(400)
+      return res.end("Poll macthing query does not exist")
+    }else if(!question.userid.equals(req.user._id)){
+      res.writeHead(401)
+      return res.end("The Poll edit is unauthorize by non creator")
+    }else{
+        Question.findByIdAndRemove(req.params.id, (err, q)=>{
+          if(err){
+            res.writeHead(500);
+            return res.end("Error: "+err.message)
+          }else{
+            return res.send({ q })
+          }
 
+        });
+    }
+  })
+})
 
 module.exports = router;

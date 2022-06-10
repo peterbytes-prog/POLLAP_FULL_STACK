@@ -20,6 +20,11 @@ var new_users = [
     id:"629c045579c499367028a4ca"
   }
 ]
+
+let userHash = [
+                  "Basic "+ new Buffer(new_users[0].username+':'+new_users[0].password).toString('base64'),
+                  "Basic "+ new Buffer(new_users[1].username+':'+new_users[1].password).toString('base64'),
+                ]
 var questions = [
   {
   "question_text": "First English Alphabet",
@@ -101,46 +106,6 @@ function saveModelBefore(){
 
         });
   })
-  // User.find({},(err, users)=>{
-  //       console.log("A", err)
-  //       models['users'] = users.map((user)=>user.id);
-  //       Question.find({},(err, qs)=>{
-  //         console.log("B", err)
-  //         models['questions'] = qs.map((q)=>q.id);
-  //         User.insertMany(new_users)
-  //         .then((users)=>{
-  //           for(let usr in users){
-  //             new_users[usr] = users[usr]
-  //             questions[usr].userid = users[usr]
-  //           }
-  //           Question.insertMany(questions,(error, qs)=>{
-  //             console.log("D", err)
-  //             if(error){
-  //
-  //
-  //               return Promise.resolve('Done A')
-  //             }
-  //             else{
-  //               for(let q in qs){
-  //                 questions[q] = qs[q]
-  //               }
-  //               console.log('returning before cb')
-  //               return Promise.resolve('Done B')
-  //             }
-  //           })
-  //         }, (err)=>{
-  //           console.log("C", err)
-  //           return Promise.resolve('Done C')
-  //         })
-  //         .catch((err)=>{
-  //           console.log("E", err)
-  //
-  //           return Promise.resolve('Done D')
-  //         })
-  //       });
-  //
-  //     });
-  //       console.log('end save model')
 }
 function cleanModelAfter(){
     return new Promise((resolve)=>{
@@ -153,7 +118,6 @@ function cleanModelAfter(){
         }
         Question.deleteMany({id:{$in:to_remove}})
         .then((q)=>{
-                      console.log('Cleaned Question DB',q);
                       User.find({},(err, users)=>{
                         let to_remove =[];
                         for(let user of users){
@@ -183,16 +147,13 @@ describe("Test poll/ routes", function(){
   });
 
   });
-
-
   it("Post / Return 401 no user matched id", function(done){
     supertest(app)
     .post('/api/polls')
-    .send({userId: "629c05df79c499367028a4d2"})
+    .set({'Authorization': "Basic "+ new Buffer('new_users[0].username'+':'+"new_users[0].password").toString('base64')})
+    .send({})
     .expect(401)
-    .expect("Invalid Authentication")
     .end((err, res)=>{
-      console.log(err, res);
       if(err){
         return done(err)
       }
@@ -203,7 +164,6 @@ describe("Test poll/ routes", function(){
     supertest(app)
     .post('/api/polls')
     .expect(401)
-    .expect("Invalid Authentication")
     .end((err, res)=>{
       if(err){
         return done(err)
@@ -214,7 +174,7 @@ describe("Test poll/ routes", function(){
   it("Post / Return 400 if valid user id send with header and question text length less than 3", function(done){
     supertest(app)
     .post('/api/polls')
-    .send({userId:new_users[0].id})
+    .set({'Authorization': userHash[0]})
     .expect(400)
     .expect("question text must be greater than 3")
     .end((err, res)=>{
@@ -227,7 +187,8 @@ describe("Test poll/ routes", function(){
   it("Post / Return 400 if valid user id send with header and no choice text provided", function(done){
     supertest(app)
     .post('/api/polls')
-    .send({userId:new_users[0].id, question_text:"Favorite Color"})
+    .set({'Authorization': userHash[0]})
+    .send({question_text:"Favorite Color"})
     .expect(400)
     .expect("choice_text[] must be provide and lenth greater than one")
     .end((err, res)=>{
@@ -240,7 +201,8 @@ describe("Test poll/ routes", function(){
   it("Post / Return 200 if valid user id send with header and choice text provided", function(done){
     supertest(app)
     .post('/api/polls')
-    .send({userId:new_users[0].id, question_text:"Favorite Color", choice_text:["Yellow", "Green","Blue"]})
+    .set({'Authorization': userHash[0]})
+    .send({question_text:"Favorite Color", choice_text:["Yellow", "Green","Blue"]})
     .expect(200)
     .end((err, res)=>{
       if(err){
@@ -293,25 +255,155 @@ describe("Test poll/ routes", function(){
 
     })
 });
-// describe("Test poll/:id routes", function(){
-//   it('GET / should return all a poll matching id', function(done){
-//     response = null;
-//     chai.expect(response).to.be.a('object');
-//     done();
-//   });
-//   it('POST / update vote for provide choice id', function(done){
-//     response = null;
-//     chai.expect(response).to.be.a('object');
-//     done()
-//   })
-//   it('put / update poll detail with prodived id', function(done){
-//     response = null;
-//     chai.expect(response).to.be.a('object');
-//     done()
-//   })
-//   it('delete / delete poll with prodived id', function(done){
-//     response = null;
-//     chai.expect(response).to.be.a('object');
-//     done()
-//   })
-// });
+describe("Test poll/:id routes", function(){
+  before(()=>{
+
+    return new Promise((resolve) => {
+        saveModelBefore()
+        .then((val)=>{console.log('before Completed');  resolve();}, (err)=>{resolve()})
+        .catch((err)=>resolve())
+
+  });
+  });
+  it('GET / should return a poll matching id', function(done){
+    supertest(app)
+    .get('/api/polls/629c05df79c499367028a4d8')
+    .expect(200)
+    .end((err, res)=>{
+      chai.expect(err).to.be.null;
+      chai.expect(res.body.question).to.be.null;
+    });
+    let q = questions[0];
+    supertest(app)
+    .get(`/api/polls/${q.id}`)
+    .expect(200)
+    .end((err, res)=>{
+      chai.expect(err).to.be.null;
+      chai.assert(res.body.question._id,q.id, "returned quesstion doesnt match id provided");
+      done();
+    })
+  });
+  it('POST / for voting reqires Authentication', function(done){
+    supertest(app)
+    .post('/api/polls/629c05df79c499367028a4d8')
+    .expect(401)
+    .end((err,res)=>{
+      if(err){
+        return done(err)
+      }else{
+        return done()
+      }
+    })
+  })
+  it('POST / updates votes of poll with choice id', function(done){
+    let q = questions[0];
+    let choice_id = q.choices[0].id
+    supertest(app)
+    .post(`/api/polls/${q.id}`)
+    .set({'Authorization': userHash[1]})
+    .send({choice_id:choice_id})
+    .expect(200)
+    .end((err, res)=>{
+      if(err){
+        return done(err)
+      }
+      chai.assert(q.choices[0].votes.length+1,res.body.question.choices[0].votes.length, "Votes Not added to choice")
+      return done()
+    })
+  })
+  it('PUT / require Authentication', function(done){
+    supertest(app)
+    .put("/api/polls/629c05df79c499367028a4d8")
+    .expect(401)
+    .end((err,res)=>{
+      if(err){
+        return done(err)
+      }else{
+        return done()
+      }
+    })
+  })
+  it('PUT / require owner', function(done){
+    let q = questions[0];
+    supertest(app)
+    .delete(`/api/polls/${q.id}`)
+    .set({'Authorization': userHash[1]})
+    .send({})
+    .expect(401)
+    .expect("The Poll edit is unauthorize by non creator")
+    .end((err, res)=>{
+      if(err){
+        return done(err)
+      }
+      return done()
+    })
+  })
+  it('PUT / update poll text, update choices and add new choice', function(done){
+    let q = questions[1];
+    let choice =q.choices[0].id;
+    supertest(app)
+    .put(`/api/polls/${q.id}`)
+    .set({'Authorization': userHash[1]})
+    .send({
+      'question_text':q.question_text+"?",
+      "choice_text": ["New choice", "????"],
+      delete_choices:[q.choices[1].id],
+      choice : q.choices[0].choice_text+" UPDATED"
+    })
+    .expect(200)
+    .end((err,res)=>{
+      if(err){
+        return done(err)
+      }else{
+        return done()
+      }
+    })
+  })
+  it("Delete/ require Authentication", function(done){
+    supertest(app)
+    .delete('/api/polls/629c05df79c499367028a4d8')
+    .expect(401)
+    .end((err, res)=>{
+      if(err){
+        return done(err)
+      }
+      return done()
+    })
+  })
+  it("Delete/ require owner", function(done){
+    let q = questions[0];
+    supertest(app)
+    .delete(`/api/polls/${q.id}`)
+    .set({'Authorization': userHash[1]})
+    .send({})
+    .expect(401)
+    .expect("The Poll edit is unauthorize by non creator")
+    .end((err, res)=>{
+      if(err){
+        return done(err)
+      }
+      return done()
+    })
+  })
+  it('Delete / delete poll with prodived id', function(done){
+    let q = questions[1];
+    supertest(app)
+    .delete(`/api/polls/${q.id}`)
+    .set({'Authorization': userHash[1]})
+    .send({})
+    .expect(200)
+    .end((err, res)=>{
+      if(err){
+        return done(err)
+      }
+      return done()
+    })
+  })
+  after(()=>{
+    return new Promise((resolve)=>{
+      cleanModelAfter()
+      .then((val)=>resolve(), (err)=>resolve())
+      .catch((err)=> resolve())
+    })
+  })
+});

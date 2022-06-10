@@ -31,7 +31,8 @@ const QuestionSchema = new Schema({
     question_text: String,
     userid:{
       type: mongoose.Schema.Types.ObjectId,
-      ref: User
+      ref: User,
+      require: true,
     },
     choices: [ChoiceSchema]
 });

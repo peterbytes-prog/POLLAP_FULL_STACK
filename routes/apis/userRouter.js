@@ -13,14 +13,9 @@ router.get("/", async (req, res)=>{
         res.end('Internal Error '+err);
       })
     .catch((err)=>{
-      console.log('D')
       res.writeHead(500)
       res.end('Internal Error '+err);
     })
-
-
-    console.log(user)
-    res.json({ user });
 });
 router.put("/", async (req,res)=>{
   const {id, ...data} = req.body;
