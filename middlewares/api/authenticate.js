@@ -1,46 +1,45 @@
 const User = require("../../models/user.js");
+const config = require("../../config");
 const { Choice, Question, Vote } = require('../../models/poll');
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
+const jwt = require('jsonwebtoken');
 
 const mongoose = require('mongoose');
 
-// const connect = mongoose.connect(
-//   "mongodb://localhost/polldb", {useNewUrlParser:true}
-// );
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-function loginRequired(req, res, next){
-  let authHeader = req.headers.authorization;
-  if(!authHeader){
-    var err = new Error('You are not authenticated');
-    res.setHeader('WWW-Authenticate', 'Basic');
-    err.status = 401;
-    return next(err);
-  }
-  let auth = new Buffer(authHeader.split(' ')[1], 'base64').toString().split(':');
-  var user= auth[0];
-  var psw = auth[1];
-  User.findOne({username:user, password:psw}, (err, user)=>{
-    if(err||!user){
-      var err = new Error('You are not authenticated');
-      res.setHeader('WWW-Authenticate', 'Basic');
-      err.status = 401;
-      return next(err);
-    }else{
-      req.user = user;
-      return next()
-    }
-  })
+
+exports.getToken = (user)=>{
+  return jwt.sign(user, config.secretKey, {expiresIn: 3600})
 }
+var opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = config.secretKey;
+exports.jwtPassport = passport.use(new JwtStrategy(opts, (jwt_payload, done)=>{
 
-function isPollOwner(req, res, next){
-  Question.findById(req.params.id, (err,poll)=>{
-    if(err || !poll || !req.session.userId){
-      res.redirect('/polls');
-    }else if (poll.userid == req.session.userId) {
-      next();
-    }else{
-      res.redirect('/polls');
-    }
-
+  User.findOne({_id:jwt_payload._id}, (err, user)=>{
+    console.log("JWT payload: ", jwt_payload);
+        User.findOne({_id: jwt_payload._id}, (err, user) => {
+            if (err) {
+                return done(err, false);
+            }
+            else if (user) {
+                return done(null, user);
+            }
+            else {
+                return done(null, false);
+            }
   })
-}
-module.exports = {loginRequired, isPollOwner }
+})
+
+
+
+}))
+
+exports.verifyUser = passport.authenticate('jwt', {session: false});

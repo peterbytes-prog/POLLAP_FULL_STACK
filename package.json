@@ -14,8 +14,13 @@
     "chai": "^4.3.6",
     "express": "^4.18.1",
     "express-session": "^1.17.3",
+    "jsonwebtoken": "^8.5.1",
     "mocha": "^10.0.0",
-    "mongoose": "^6.3.5"
+    "mongoose": "^6.3.5",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^7.1.2"
   },
   "devDependencies": {
     "ejs": "^3.1.8",

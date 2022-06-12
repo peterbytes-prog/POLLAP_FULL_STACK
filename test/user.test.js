@@ -33,7 +33,7 @@ async function cleanModelAfter(done){
       }
       User.deleteMany({id:{$in:to_remove}})
       .then((user)=>{console.log('Cleaned DB'); done()},
-            (err)=>console.log('err', err))
+            (err)=>console.log('err dele save', err))
     });
   }else{
     console.log('No users')
@@ -164,7 +164,7 @@ describe("users/sign up methods", function(){
     .post("/api/users/create")
     .expect(400)
     .end(function(err, res){
-      assert.equal(res.text,"Bad Request, data missing", "Bad Request, data missing")
+      assert.equal(res.text,"Error can create user No username was given", "Bad Request, data missing")
       if(err){
         done(err);
       }else done();

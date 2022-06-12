@@ -1,7 +1,7 @@
 const express = require('express');
 const router =  express.Router();
-// const authenticators = require('../middlewares/authenticate');
-const authenticators = require('../../middlewares/api/authenticate');
+const passport = require('passport');
+const authenticate = require('../../middlewares/api/authenticate');
 const User = require("../../models/user.js");
 
 router.get("/", async (req, res)=>{
@@ -66,23 +66,11 @@ router.get("/login",(req,res)=>{
     res.writeHead(405);
     res.end("GET Not Allow");
 });
-router.post("/login", async (req, res)=>{
+router.post("/login", passport.authenticate('local', {session:false}), (req, res)=>{
+  var token = authenticate.getToken({_id:req.user._id});
+  res.statusCode = 200;
+  return res.json({success: true, token: token, status: 'You are successfully logged in!'});
 
-  const username = req.body.username || "";
-  const password = req.body.password || "";
-  User.findOne({username:username, password:password})
-  .then((user)=>{
-    if(user){
-      res.json({ user });
-    }else{
-      res.writeHead(400)
-      res.end('No User Found');
-    }
-
-  }, (err)=>{
-    res.writeHead(300)
-    res.end('Sever error'+err);
-  })
 });
 router.put("/login",(req,res)=>{
     res.writeHead(405);
@@ -92,7 +80,6 @@ router.delete("/login",(req,res)=>{
     res.writeHead(405);
     res.end("Delete Not Allow");
 });
-
 
 router.get("/create", (req, res)=>{
   res.writeHead(405);
@@ -106,31 +93,31 @@ router.delete("/create", (req, res)=>{
   res.writeHead(405);
   res.end("Delete Not Allow");
 })
-router.post("/create", async (req, res)=>{
-  const data = {};
-  data.email = req.body.email;
-  data.username = req.body.username;
-  data.password = req.body.password;
-  data.gender = req.body.gender;
-  data.firstname = req.body.firstname;
-  data.lastname = req.body.lastname;
-  data.age = req.body.age;
-  if ((data.username)
-      && (req.body.password)
-    ){
-      await User.create(data, (error, user)=>{
-        if(error || !user){
-          res.writeHead(400);
-          return res.end("Error can create user"+error);
-        }else{
-          return res.json({'id':user.id});
-        }
-      })
-    }
-  else{
-    res.writeHead(400);
-    res.end("Bad Request, data missing");
-  }
+router.post("/create", (req, res)=>{
+  req.body.password = req.body.password || ""
+  req.body.username = req.body.username || ""
+  User.register(
+                new User({username:req.body.username}),
+                req.body.password, (err, user)=>{
+                    if(err){
+                        res.statusCode = 400
+                        return res.send("Error can create user "+err.message);
+                    }else{
+
+                      passport.authenticate('local')(req, res, ()=>{
+                        console.log('B', err, user);
+                        // if(err){
+                        //   console.log('err 1', err.message)
+                        //   res.statusCode = 400
+                        //   return res.end("Error can create user "+err.message);
+                        // }
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        return res.json({success: true, status: 'Registration Successful!'});
+                      })
+                    }
+
+                  })
 })
 
 module.exports = router;

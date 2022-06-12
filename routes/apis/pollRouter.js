@@ -1,8 +1,9 @@
 const express = require('express');
 const { Choice, Question, Vote } = require('../../models/poll');
-const authenticators = require("../../middlewares/api/authenticate");
+const authenticate = require("../../middlewares/api/authenticate");
 const util = require('util')
 const User = require('../../models/user');
+
 const router = express.Router();
 
 router.get('/', (req, res)=>{
@@ -35,7 +36,7 @@ router.delete('/', async(req, res)=>{
   res.writeHead(405);
   res.end("Delete Not Allow");
 })
-router.post('/',authenticators.loginRequired, (req, res)=>{
+router.post('/', authenticate.verifyUser, (req, res)=>{
     let q = req.body.question_text || "";
     req.body.userid = req.user;
     if(q.length >=3 ){
@@ -83,7 +84,7 @@ router.get('/:id', (req, res)=>{
     return res.json({ question })
   })
 })
-router.put('/:id', authenticators.loginRequired, (req, res)=>{
+router.put('/:id', authenticate.verifyUser, (req, res)=>{
   const to_remove = req.body.delete_choices || [];
   Question.findById(req.params.id, (err, question)=>{
     if(err){
@@ -159,7 +160,7 @@ router.put('/:id', authenticators.loginRequired, (req, res)=>{
     }
   })
 })
-router.post('/:id', authenticators.loginRequired, (req, res)=>{
+router.post('/:id', authenticate.verifyUser, (req, res)=>{
   v = {
     userid:req.user,
     choiceid: req.body.choice_id
@@ -190,7 +191,7 @@ router.post('/:id', authenticators.loginRequired, (req, res)=>{
     return res.end("Error: "+err.message)
   })
 })
-router.delete('/:id', authenticators.loginRequired, (req, res)=>{
+router.delete('/:id', authenticate.verifyUser, (req, res)=>{
 
   Question.findById(req.params.id, (err, question)=>{
 
