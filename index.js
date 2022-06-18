@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 var passport = require('passport');
 
+const category = require('./models/categories');
+
 const authenticators = require("./middlewares/api/authenticate");
 
 const app = express();
@@ -21,12 +23,13 @@ app.use(express.static('public'));
 
 app.use(passport.initialize());
 // app.use(passport.session());
-
+global.loggedIn = false;
 const userRouter = require('./routes/userRouter');
 const pollRouter = require("./routes/pollRouter");
 
 const apiUserRouter = require('./routes/apis/userRouter');
 const apiPollRouter = require("./routes/apis/pollRouter");
+const apiCategoryRouter = require("./routes/apis/categoryRouter");
 
 function templates(name=null){
   let t = path.resolve(__dirname, 'templates');
@@ -39,6 +42,7 @@ function templates(name=null){
 const connect = mongoose.connect(
   "mongodb://localhost/polldb", {useNewUrlParser:true}
 );
+
 app.listen(3000, ()=>{
   console.log("App Listening on port 3000");
 });
@@ -49,6 +53,7 @@ app.get("/", (req, res)=>{
 
 app.use("/api/users", apiUserRouter);
 app.use("/api/polls", apiPollRouter);
+app.use("/api/categories", apiCategoryRouter);
 app.use("/users", userRouter);
 app.use("/polls", pollRouter);
 

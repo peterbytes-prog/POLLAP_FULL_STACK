@@ -4,22 +4,25 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const VoteSchema = new Schema({
-  userid:{
+  user:{
     type: mongoose.Schema.Types.ObjectId,
-    ref: User
+    ref: User,
+    required:true
   },
-  choiceid:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Choice"
-  }
-});
+
+},{timestamps: true });
 const Vote = mongoose.model("Vote", VoteSchema);
 
 const ChoiceSchema = new Schema({
-  choice_text: String,
-  questionid:{
+  choice_text: {
+    type:String,
+    required:true,
+    minLength: [1,"Choice Character length must be cannot be empty"]
+  },
+  question:{
     type: mongoose.Schema.Types.ObjectId,
-    ref:"Question"
+    ref:"Question",
+    required: true
   },
   votes: [VoteSchema]
 });
@@ -28,21 +31,27 @@ const Choice = mongoose.model('Choice', ChoiceSchema);
 
 
 const QuestionSchema = new Schema({
-    question_text: String,
-    userid:{
+    question_text:{
+      type:String,
+      required:true,
+      minLength: [1,"Question Character length must be cannot be empty"]
+    },
+    category:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true
+    },
+    user:{
       type: mongoose.Schema.Types.ObjectId,
       ref: User,
-      require: true,
-    },
-    choices: [ChoiceSchema]
-});
+      required: true,
+    }
+},{timestamps: true });
 QuestionSchema.pre('remove', function(next){
 
-  let _choices = this.choices.map((c)=> c._id);
-  Choice.deleteMany({_id:{$in:_choices}})
+  Choice.deleteMany({question:this})
   .then((choices)=>{
-     Vote.deleteMany({choiceid:{$in:_choices}})
-     .then((votes)=>next(), (err)=>console.log(err));
+    next();
   },(err)=>console.log(err))
 });
 const Question = mongoose.model('Question', QuestionSchema);

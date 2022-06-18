@@ -1,221 +1,275 @@
 const express = require('express');
+var ObjectId = require('mongodb').ObjectID;
 const { Choice, Question, Vote } = require('../../models/poll');
 const authenticate = require("../../middlewares/api/authenticate");
 const util = require('util')
 const User = require('../../models/user');
+const _404Error = require('../../components/responses/404Error');
+
+
 
 const router = express.Router();
-
-router.get('/', (req, res)=>{
-  const questions = Question.find({}).populate('choices').populate('choices.votes');
-
-  questions.then(async (questions)=>{
-    for(let q in questions){
-      let q_vote_count = 0;
-      for(let choice of questions[q].choices){
-        q_vote_count+=choice.votes.length;
-      }
-      questions[q].votes_count = q_vote_count;
-    }
-    res.json({questions});
+router.route('/')
+.get((req, res)=>{
+  Question.find({}).populate('category')
+  .then((questions)=>{
+    Promise.all(questions.map( async (question)=>{
+      const choices = await Choice.find({ question:question })
+      return {...question._doc, 'choices':choices}
+    }))
+    .then((data)=>{
+      res.statusCode = 200
+      res.setHeader('Content-Type', 'application/json');
+      return res.json(data)
+    }, (err)=>{
+      return _404Error(req,res, err);
+    })
+    .catch((err)=>{
+      return _404Error(req,res, err);
+    })
   }, (err)=>{
-              res.writeHead(500);
-              res.end('Internal Error '+error);
-            })
+    return _404Error(req,res, err);
+  })
   .catch((err)=>{
-    res.writeHead(500)
-    res.end('Internal Error '+error);
+    return _404Error(req,res, err);
   })
 
-});
-router.put('/', async(req, res)=>{
-  res.writeHead(405);
-  res.end("Delete Not Allow");
 })
-router.delete('/', async(req, res)=>{
-  res.writeHead(405);
-  res.end("Delete Not Allow");
-})
-router.post('/', authenticate.verifyUser, (req, res)=>{
-    let q = req.body.question_text || "";
-    req.body.userid = req.user;
-    if(q.length >=3 ){
-      let _choices = req.body.choice_text || []
-      if(_choices.length<2){
-        res.writeHead(400)
-        return res.end('choice_text[] must be provide and lenth greater than one')
-      }
-      const question = Question.create(req.body);
-      question
-      .then((question)=>{
-        let choice_objects = []
-        for(let c of req.body.choice_text){
-          if(c.length<1){
-            continue
-          }
-          let choice_data = {
-            choice_text: c,
-            questionid: question._id
-          }
-          question.choices.addToSet(choice_data)
-        };
+.put((req, res)=>{
 
-        question.save()
-        .then((question)=>{
-          return res.json({question})
-        }, (err)=>{console.log(err)})
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-    }
-    else{
-      res.writeHead(400)
-      res.end('question text must be greater than 3')
-    }
-});
-
-router.get('/:id', (req, res)=>{
-  Question.findById(req.params.id, (err, question)=>{
-    if(err){
-      res.writeHead(500)
-      return res.end("Error "+ err.message)
-    }
-    return res.json({ question })
-  })
+  res.writeHead(405);
+  res.end("METHOD_NOT_ALLOWED");
 })
-router.put('/:id', authenticate.verifyUser, (req, res)=>{
-  const to_remove = req.body.delete_choices || [];
-  Question.findById(req.params.id, (err, question)=>{
-    if(err){
-      res.writeHead(500);
-      return res.end("Error: "+err.message)
-    }else if(!question){
-      res.writeHead(400)
-      return res.end("Poll macthing query does not exist")
-    }else if(!question.userid.equals(req.user._id)){
-      res.writeHead(401)
-      return res.end("The Poll edit is unauthorize by non creator")
-    }else{
-        let query = [];
-        if(req.body.question_text){
-          query.push({
-            updateOne:{
-              filter:{id:question.id},
-              update:{question_text:req.body.question_text}
-            }
-          });
+.delete(async(req, res)=>{
+  res.writeHead(405);
+  res.end("METHOD_NOT_ALLOWED");
+})
+.post(authenticate.verifyUser, (req, res)=>{
+    req.body.user = req.user;
+    Question.create(req.body)
+    .then((new_question)=>{
+        if(req.body.choices && (req.body.choices.length>0) ){
+          const choices = req.body.choices.map((choice)=>{return({choice_text:choice, question:new_question})})
+          Choice.insertMany(choices)
+          .then((result)=>{
+            let respData = {'question':new_question, 'choices':result.map((c)=>c._id) };
+            res.statusCode = 201
+            res.setHeader('Content-Type', 'application/json');
+            return res.json(respData);
+          }, (err)=>{
+            return _404Error(req,res, err);
+          })
+          .catch((err)=>{
+            return _404Error(req,res, err);
+          })
         }
+        else{
+          return res.json(new_question);
+        }
+      },(err)=>{
+        return _404Error(req,res, err);
+      })
+    .catch((err)=>{
+        return _404Error(req,res, err);
+      })
+  });
 
-        for(let choice of question.choices)
-          {
-            if(req.body[choice.id])
-            {
-                let opt = false;
-                opt = {
-                              updateOne:{
-                                          "filter": {id:req.params.id},
-                                          'update': {"choices.$[e].choice_text":req.body[choice.id]},
-                                          "arrayFilters":[{'e._id':choice._id}]
-                                        }
-                              }
-                if(opt){query.push(opt)}
-            }
-          }
-        Question.bulkWrite(query)
-        .then(async (response)=>{
-          const question = await Question.findById(req.params.id).populate('choices');
-          let update = false;
-          req.body.choice_text = req.body.choice_text || [];
-          for(let nw_choice of req.body.choice_text){
-            if(nw_choice.length >=1){
-              let choice_data = {
-                choice_text: nw_choice,
-                questionid: question._id
-              }
-              update = true;
-              question.choices.push(choice_data);
-            }
-          }
-          for(let choiceid of to_remove){
-            question.choices.id(choiceid).remove();
-            update = true;
-          }
-          if(update){
-            question.save()
-            .then((question)=>{
-              return res.send({ question })
-            }, (err)=>{
-              res.writeHead(400)
-              return res.end('Error '+ err.message)
-            })
-          }else{
-            return res.send({ question })
-          }
-        }, (err)=>{
-          res.writeHead(400)
-          return res.end('Error '+ err.message)
-        });
-
-    }
-  })
-})
-router.post('/:id', authenticate.verifyUser, (req, res)=>{
-  v = {
-    userid:req.user,
-    choiceid: req.body.choice_id
-  }
-  Question.updateOne(
-    {_id:req.params.id},
-    {
-      $addToSet:{
-        'choices.$[e].votes':v
-      }
-    },
-    {arrayFilters: [ {'e._id':req.body.choice_id} ], multi: true }
-  ).then((question)=>{
-    Question.findById(req.params.id,(err, question)=>{
-      if(err){
-        res.writeHead(500);
-        return res.end("Error: "+err.message)
-      }else{
-        res.send({question})
-      }
+router.route('/:pollId')
+.get((req, res)=>{
+  Question.findById(req.params.pollId).populate('category')
+  .then((question)=>{
+    Choice.find({ question:question })
+    .then((choices)=>{
+      const data = {...question._doc, 'choices':choices}
+      res.statusCode = 200
+      res.setHeader('Content-Type', 'application/json');
+      return res.json(data)
+    },(err)=>{
+        return _404Error(req,res, err);
+    })
+    .catch((err)=>{
+        return _404Error(req,res, err);
     })
   }, (err)=>{
-      res.writeHead(500);
-      return res.end("Error: "+err.message)
-    })
+      return _404Error(req,res, err);
+  })
+  .catch((err) => {
+      return _404Error(req,res, err);
+  })
+})
+.put(authenticate.verifyUser, authenticate.verifyOwner,  (req, res)=>{
+  Question.findByIdAndUpdate(req.poll._id,{$set:{question_text: req.body.question_text}})
+  .then((question)=>{
+    res.statusCode = 201
+    res.setHeader('Content-Type', 'application/json');
+    return res.json(question);
+  }, (err)=>{
+    return _404Error(req,res, err);
+  })
   .catch((err)=>{
-    res.writeHead(500);
-    return res.end("Error: "+err.message)
+    return _404Error(req,res, err);
   })
 })
-router.delete('/:id', authenticate.verifyUser, (req, res)=>{
+.post((req, res)=>{
+  res.writeHead(405);
+  res.end("METHOD_NOT_ALLOWED");
+})
+.delete(authenticate.verifyUser, authenticate.verifyOwner, (req, res)=>{
 
-  Question.findById(req.params.id, (err, question)=>{
+  Question.findByIdAndDelete(req.poll._id)
+  .then((question)=>{
+    Choice.deleteMany({question: question})
+    .then((choices)=>{
+        res.statusCode = 201
+        res.setHeader('Content-Type', 'application/json');
+        return res.json(question)
+      }, (err)=>{
+        return _404Error(req,res, err);
+      })
+    .catch((err)=>{
+      return _404Error(req,res, err);
+      })
+    res.statusCode = 201
+    res.setHeader('Content-Type', 'application/json');
+    return res.json(question);
+  }, (err)=>{
+    return _404Error(req,res, err);
+  })
+  .catch((err)=>{
+    return _404Error(req,res, err);
+  })
 
-    if(err){
-      res.writeHead(500);
-      return res.end("Error: "+err.message)
-    }else if(!question){
-      res.writeHead(400)
-      return res.end("Poll macthing query does not exist")
-    }else if(!question.userid.equals(req.user._id)){
-      res.writeHead(401)
-      return res.end("The Poll edit is unauthorize by non creator")
-    }else{
-        Question.findByIdAndRemove(req.params.id, (err, q)=>{
-          if(err){
-            res.writeHead(500);
-            return res.end("Error: "+err.message)
-          }else{
-            return res.send({ q })
-          }
+})
 
-        });
+
+router.route('/:pollId/choices')
+.get((req, res)=>{
+  Choice.find({question:req.params.pollId})
+  .then((choices)=>{
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json');
+    return res.json(choices)
+  },(err)=>{
+    return _404Error(req,res, err);
+  })
+  .catch((err)=>{
+    return _404Error(req,res, err);
+  })
+})
+.post(authenticate.verifyUser, authenticate.verifyOwner, (req, res)=>{
+  Choice.create(
+    {
+      choice_text: req.body.choice_text,
+      question: req.poll
     }
+  )
+  .then((choice)=>{
+    res.statusCode = 201
+    res.setHeader('Content-Type', 'application/json');
+    return res.json(choice)
+  }, (err)=>{
+    return _404Error(req,res, err);
+  })
+  .catch((err)=>{
+    return _404Error(req,res, err);
   })
 })
+.put((req, res)=>{
+  res.writeHead(405);
+  res.end("METHOD_NOT_ALLOWED");
+})
+.delete((req, res)=>{
+  res.writeHead(405);
+  res.end("METHOD_NOT_ALLOWED");
+})
 
+
+router.route('/:pollId/choices/:choiceId')
+.get((req,res)=>{
+  Choice.findById(req.params.choiceId)
+  .then((choice)=>{
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json');
+    return res.json(choice)
+  }, (err) => {
+    return _404Error(req,res, err);
+  })
+  .catch((err)=>{
+    return _404Error(req,res, err);
+  })
+})
+.post(authenticate.verifyUser, (req,res)=>{
+
+  Choice.update(
+    {
+      'question': ObjectId(req.params.pollId),
+      'votes.user': req.user
+    },
+    {
+      $pull: { votes: {'user': req.user}}
+    },
+    { multi: true }
+  )
+  .then((choice)=>{
+    Choice.findOneAndUpdate(
+      {
+        'question': ObjectId(req.params.pollId),
+        '_id':req.params.choiceId
+      },
+      {
+        $push: {
+              votes: {
+                user:req.user
+              }
+        }
+      }
+    )
+    .then((choice)=>{
+      res.statusCode = 200
+      res.setHeader('Content-Type', 'application/json');
+      return res.json(choice)
+    },(err)=>{
+      return _404Error(req,res, err);
+    })
+    .catch((err)=>{
+      return _404Error(req,res, err);
+    })
+  }, (err) => {
+    return _404Error(req,res, err);
+  })
+  .catch((err)=>{
+    return _404Error(req,res, err);
+  })
+})
+.put(authenticate.verifyUser, authenticate.verifyOwner, (req,res)=>{
+  Choice.findByIdAndUpdate(req.params.choiceId, {choice_text: req.body.choice_text})
+  .then((choice)=>{
+    res.statusCode = 201
+    res.setHeader('Content-Type', 'application/json');
+    return res.json(choice)
+  }, (err)=>{
+    return _404Error(req,res, err);
+  })
+  .catch((err)=>{
+    return _404Error(req,res, err);
+  })
+})
+.delete(authenticate.verifyUser, authenticate.verifyOwner, (req,res)=>{
+  Choice.findByIdAndDelete(req.params.choiceId)
+  .then((choice)=>{
+    res.statusCode = 201
+    res.setHeader('Content-Type', 'application/json');
+    return res.json({"message": "choice deleted"})
+  }, (err) => {
+    return _404Error(req,res, err);
+  })
+  .catch((err)=>{
+    return _404Error(req,res, err);
+  })
+})
 module.exports = router;
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmFkZjUxNDBmOTc3NmYzMjhlYmZkZjIiLCJpYXQiOjE2NTU1NzU1NDksImV4cCI6MTY1NTU3OTE0OX0.QVKLP5geciVQc8NBbELq6u0oJxNOewVqp3-eDuW3LB8
+//client1
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmE1OWRkNzE2MWQ0ZDg2Y2JkM2FlMDAiLCJpYXQiOjE2NTU1NzgxNTYsImV4cCI6MTY1NTU4MTc1Nn0.CXnzKZWo-CKoNmR7gSsKSw9nCAfT6Tzso1Pu-qp7NZI
+//admin

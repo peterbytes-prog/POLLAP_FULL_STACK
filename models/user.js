@@ -18,6 +18,10 @@ const UserSchema = new Schema({
   //     type:String,
   //     enum:['Male', 'Female']
   // },
+  admin: {
+    type:Boolean,
+    default: false
+  },
   email: {
             type:String,
             required:false,

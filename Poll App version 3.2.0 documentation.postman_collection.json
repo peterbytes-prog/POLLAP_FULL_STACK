@@ -1,0 +1,2468 @@
+{
+	"info": {
+		"_postman_id": "d093b025-d5fd-4b85-bd47-4ccfac335fed",
+		"name": "Poll App version 3.2.0 documentation",
+		"description": "A simple Poll Server and Manager (Node & Express)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17416440"
+	},
+	"item": [
+		{
+			"name": "polls",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "choices",
+							"item": [
+								{
+									"name": "{choiceid}",
+									"item": [
+										{
+											"name": "/polls/:id/choices/:choiceid",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"polls",
+														":id",
+														"choices",
+														":choiceid"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														},
+														{
+															"key": "choiceid",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												},
+												"description": "Return Choice infomation for choiceid"
+											},
+											"response": [
+												{
+													"name": "Successfully Return choice info",
+													"originalRequest": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "localhost:3000/api/polls/:id/choices/:choiceid",
+															"host": [
+																"localhost"
+															],
+															"port": "3000",
+															"path": [
+																"api",
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "{\n  \"choice_text\": \"anim consectetur in et\",\n  \"votes\": [\n    [\n      {\n        \"user\": {\n          \"username\": \"aliquip ipsum ullamco sit\"\n        },\n        \"date\": \"ex eiusmod deserunt exercitation anim\"\n      },\n      {\n        \"user\": {\n          \"username\": \"deserunt\"\n        },\n        \"date\": \"nostrud dolore\"\n      }\n    ],\n    [\n      {\n        \"user\": {\n          \"username\": \"et in\"\n        },\n        \"date\": \"aute do minim ut\"\n      },\n      {\n        \"user\": {\n          \"username\": \"in do laboris\"\n        },\n        \"date\": \"in fugiat proident\"\n      }\n    ]\n  ]\n}"
+												}
+											]
+										},
+										{
+											"name": "/polls/:id/choices/:choiceid",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "<Bearer Token>",
+															"type": "string"
+														}
+													]
+												},
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"choice_text\": \"mollit sit voluptate nostrud ut\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"polls",
+														":id",
+														"choices",
+														":choiceid"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														},
+														{
+															"key": "choiceid",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												},
+												"description": "Update Choice info"
+											},
+											"response": [
+												{
+													"name": "succesfully updated choice",
+													"originalRequest": {
+														"method": "PUT",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: bearer",
+																"key": "Authorization",
+																"value": "Bearer <token>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"choice_text\": \"mollit sit voluptate nostrud ut\"\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "localhost:3000/api/polls/:id/choices/:choiceid",
+															"host": [
+																"localhost"
+															],
+															"port": "3000",
+															"path": [
+																"api",
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "Created",
+													"code": 201,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "text/plain"
+														}
+													],
+													"cookie": [],
+													"body": ""
+												},
+												{
+													"name": "Invalid request",
+													"originalRequest": {
+														"method": "PUT",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: bearer",
+																"key": "Authorization",
+																"value": "Bearer <token>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"choice_text\": \"mollit sit voluptate nostrud ut\"\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "Bad Request",
+													"code": 400,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "{\n  \"message\": \"do ex\"\n}"
+												},
+												{
+													"name": "Not authenticated",
+													"originalRequest": {
+														"method": "PUT",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: bearer",
+																"key": "Authorization",
+																"value": "Bearer <token>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"choice_text\": \"mollit sit voluptate nostrud ut\"\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "Unauthorized",
+													"code": 401,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "text/plain"
+														}
+													],
+													"cookie": [],
+													"body": ""
+												},
+												{
+													"name": "Access token does not have the required scope",
+													"originalRequest": {
+														"method": "PUT",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: bearer",
+																"key": "Authorization",
+																"value": "Bearer <token>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"choice_text\": \"mollit sit voluptate nostrud ut\"\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "Forbidden",
+													"code": 403,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "text/plain"
+														}
+													],
+													"cookie": [],
+													"body": ""
+												}
+											]
+										},
+										{
+											"name": "/polls/:id/choices/:choiceid",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "<Bearer Token>",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"confirm\": true\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"polls",
+														":id",
+														"choices",
+														":choiceid"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														},
+														{
+															"key": "choiceid",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												},
+												"description": "Add Votes to choices"
+											},
+											"response": [
+												{
+													"name": "Vote Successfully Updated/added",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: bearer",
+																"key": "Authorization",
+																"value": "Bearer <token>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"confirm\": true\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "localhost:3000/api/polls/:id/choices/:choiceid",
+															"host": [
+																"localhost"
+															],
+															"port": "3000",
+															"path": [
+																"api",
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "Created",
+													"code": 201,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "text/plain"
+														}
+													],
+													"cookie": [],
+													"body": ""
+												},
+												{
+													"name": "Invalid request",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: bearer",
+																"key": "Authorization",
+																"value": "Bearer <token>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"confirm\": true\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "Bad Request",
+													"code": 400,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "{\n  \"message\": \"do ex\"\n}"
+												},
+												{
+													"name": "Not authenticated",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: bearer",
+																"key": "Authorization",
+																"value": "Bearer <token>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"confirm\": true\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "Unauthorized",
+													"code": 401,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "text/plain"
+														}
+													],
+													"cookie": [],
+													"body": ""
+												}
+											]
+										},
+										{
+											"name": "/polls/:id/choices/:choiceid",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "<Bearer Token>",
+															"type": "string"
+														}
+													]
+												},
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"confirm\": true\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"polls",
+														":id",
+														"choices",
+														":choiceid"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														},
+														{
+															"key": "choiceid",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												},
+												"description": "Delete Choice"
+											},
+											"response": [
+												{
+													"name": "Succesfully deleted Choice",
+													"originalRequest": {
+														"method": "DELETE",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: bearer",
+																"key": "Authorization",
+																"value": "Bearer <token>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"confirm\": true\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "localhost:3000/api/polls/:id/choices/:choiceid",
+															"host": [
+																"localhost"
+															],
+															"port": "3000",
+															"path": [
+																"api",
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "Created",
+													"code": 201,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "{\n  \"message\": \"do ex\"\n}"
+												},
+												{
+													"name": "Invalid request",
+													"originalRequest": {
+														"method": "DELETE",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: bearer",
+																"key": "Authorization",
+																"value": "Bearer <token>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"confirm\": true\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "Bad Request",
+													"code": 400,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "{\n  \"message\": \"do ex\"\n}"
+												},
+												{
+													"name": "Not authenticated",
+													"originalRequest": {
+														"method": "DELETE",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: bearer",
+																"key": "Authorization",
+																"value": "Bearer <token>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"confirm\": true\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/polls/:id/choices/:choiceid",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"polls",
+																":id",
+																"choices",
+																":choiceid"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "choiceid",
+																	"value": "sunt nostrud ex dolor",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"status": "Unauthorized",
+													"code": 401,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "text/plain"
+														}
+													],
+													"cookie": [],
+													"body": ""
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "/polls/:id/choices",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id/choices",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id",
+												"choices"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										},
+										"description": "Return all choice for poll id"
+									},
+									"response": [
+										{
+											"name": "Successfully return all choice for a given question id",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "localhost:3000/api/polls/:id/choices",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"polls",
+														":id",
+														"choices"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "[\n  {\n    \"choice_text\": \"cillum eiusmod in\",\n    \"votes\": [\n      [\n        {\n          \"user\": {\n            \"username\": \"aliqua aliquip velit incididunt\"\n          },\n          \"date\": \"incididunt exercitation do\"\n        },\n        {\n          \"user\": {\n            \"username\": \"sint exercitation\"\n          },\n          \"date\": \"qui dolor\"\n        }\n      ],\n      [\n        {\n          \"user\": {\n            \"username\": \"dolore Lorem des\"\n          },\n          \"date\": \"pariatur\"\n        },\n        {\n          \"user\": {\n            \"username\": \"culpa voluptate do in\"\n          },\n          \"date\": \"veniam labore\"\n        }\n      ]\n    ]\n  },\n  {\n    \"choice_text\": \"ullamco eu eiusmod aliqua in\",\n    \"votes\": [\n      [\n        {\n          \"user\": {\n            \"username\": \"Duis\"\n          },\n          \"date\": \"aute ullamco qui\"\n        },\n        {\n          \"user\": {\n            \"username\": \"mollit veniam sed\"\n          },\n          \"date\": \"consectetur occaecat\"\n        }\n      ],\n      [\n        {\n          \"user\": {\n            \"username\": \"reprehenderit ipsum\"\n          },\n          \"date\": \"amet fugiat occaecat culpa\"\n        },\n        {\n          \"user\": {\n            \"username\": \"tempor voluptate\"\n          },\n          \"date\": \"reprehenderit dolor nisi\"\n        }\n      ]\n    ]\n  }\n]"
+										},
+										{
+											"name": "Invalid request",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/polls/:id/choices",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"polls",
+														":id",
+														"choices"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"message\": \"do ex\"\n}"
+										}
+									]
+								},
+								{
+									"name": "/polls/:id/choices",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "<Bearer Token>",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"choice_text\": \"mollit sit voluptate nostrud ut\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id/choices",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id",
+												"choices"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										},
+										"description": "Add a new choice to a poll"
+									},
+									"response": [
+										{
+											"name": "New Choice created",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"description": "Added as a part of security scheme: bearer",
+														"key": "Authorization",
+														"value": "Bearer <token>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"choice_text\": \"mollit sit voluptate nostrud ut\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "localhost:3000/api/polls/:id/choices",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"polls",
+														":id",
+														"choices"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Invalid request",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"description": "Added as a part of security scheme: bearer",
+														"key": "Authorization",
+														"value": "Bearer <token>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"choice_text\": \"mollit sit voluptate nostrud ut\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/polls/:id/choices",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"polls",
+														":id",
+														"choices"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"message\": \"do ex\"\n}"
+										},
+										{
+											"name": "Not authenticated",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"description": "Added as a part of security scheme: bearer",
+														"key": "Authorization",
+														"value": "Bearer <token>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"choice_text\": \"mollit sit voluptate nostrud ut\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/polls/:id/choices",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"polls",
+														":id",
+														"choices"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Access token does not have the required scope",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"description": "Added as a part of security scheme: bearer",
+														"key": "Authorization",
+														"value": "Bearer <token>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"choice_text\": \"mollit sit voluptate nostrud ut\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/polls/:id/choices",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"polls",
+														":id",
+														"choices"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								},
+								{
+									"name": "/polls/:id/choices",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id/choices",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id",
+												"choices"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										},
+										"description": "Operation Not Allowed"
+									},
+									"response": [
+										{
+											"name": "METHOD_NOT_ALLOWED",
+											"originalRequest": {
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "localhost:3000/api/polls/:id/choices",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"polls",
+														":id",
+														"choices"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "Method Not Allowed",
+											"code": 405,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								},
+								{
+									"name": "/polls/:id/choices",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id/choices",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id",
+												"choices"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										},
+										"description": "Operation Not Allowed"
+									},
+									"response": [
+										{
+											"name": "METHOD_NOT_ALLOWED",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [],
+												"url": {
+													"raw": "localhost:3000/api/polls/:id/choices",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"polls",
+														":id",
+														"choices"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "sunt nostrud ex dolor",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "Method Not Allowed",
+											"code": 405,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "/polls/:id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/polls/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"polls",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "sunt nostrud ex dolor",
+											"description": "(Required) "
+										}
+									]
+								},
+								"description": "Obtain information about a poll"
+							},
+							"response": [
+								{
+									"name": "Successfully returns poll information",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:3000/api/polls/:id",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"question_text\": \"deserunt\",\n  \"choices\": [\n    {\n      \"choice_text\": \"ut dolore\",\n      \"votes\": [\n        [\n          {\n            \"user\": {\n              \"username\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            \"date\": \"laboris\"\n          },\n          {\n            \"user\": {\n              \"username\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            \"date\": \"exercitation Ut\"\n          }\n        ],\n        [\n          {\n            \"user\": {\n              \"username\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            \"date\": \"exercitation ea irure\"\n          },\n          {\n            \"user\": {\n              \"username\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            \"date\": \"dolor minim ex ea\"\n          }\n        ]\n      ]\n    },\n    {\n      \"choice_text\": \"sit reprehenderit\",\n      \"votes\": [\n        [\n          {\n            \"user\": {\n              \"username\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            \"date\": \"in incididunt voluptate enim\"\n          },\n          {\n            \"user\": {\n              \"username\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            \"date\": \"velit tempor veniam dolor\"\n          }\n        ],\n        [\n          {\n            \"user\": {\n              \"username\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            \"date\": \"magna minim velit\"\n          },\n          {\n            \"user\": {\n              \"username\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            \"date\": \"occaecat dolor\"\n          }\n        ]\n      ]\n    }\n  ],\n  \"category\": {\n    \"name\": \"Lorem Excepteur enim amet\",\n    \"_id\": \"sed nostrud aliquip deserunt\",\n    \"parent\": \"nulla mollit sunt aute ut\",\n    \"subcategories\": [\n      {\n        \"categoryId\": \"sunt Lorem laborum\"\n      },\n      {\n        \"categoryId\": \"irure est Duis deserunt sed\"\n      }\n    ]\n  }\n}"
+								},
+								{
+									"name": "Invalid request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"message\": \"do ex\"\n}"
+								}
+							]
+						},
+						{
+							"name": "/polls/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "<Bearer Token>",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"question_text\": \"dolor\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/polls/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"polls",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "sunt nostrud ex dolor",
+											"description": "(Required) "
+										}
+									]
+								},
+								"description": "Edit poll text"
+							},
+							"response": [
+								{
+									"name": "Poll succesfully updated",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"question_text\": \"dolor\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:3000/api/polls/:id",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Invalid request",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"question_text\": \"dolor\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"message\": \"do ex\"\n}"
+								},
+								{
+									"name": "Not authenticated",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"question_text\": \"dolor\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Access token does not have the required scope",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"question_text\": \"dolor\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/polls/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "<Bearer Token>",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/polls/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"polls",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "sunt nostrud ex dolor",
+											"description": "(Required) "
+										}
+									]
+								},
+								"description": "Delete poll text"
+							},
+							"response": [
+								{
+									"name": "Poll succesfully deleted",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"url": {
+											"raw": "localhost:3000/api/polls/:id",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Invalid request",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"message\": \"do ex\"\n}"
+								},
+								{
+									"name": "Not authenticated",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Access token does not have the required scope",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: bearer",
+												"key": "Authorization",
+												"value": "Bearer <token>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/polls/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/polls/:id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/polls/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"polls",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "sunt nostrud ex dolor",
+											"description": "(Required) "
+										}
+									]
+								},
+								"description": "Not allow operation"
+							},
+							"response": [
+								{
+									"name": "METHOD_NOT_ALLOWED",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "localhost:3000/api/polls/:id",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"polls",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "sunt nostrud ex dolor",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "Method Not Allowed",
+									"code": 405,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "/polls",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/polls?categoryId=sunt nostrud ex dolor&username=sunt nostrud ex dolor",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls"
+							],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "sunt nostrud ex dolor",
+									"description": "limit the poll list to matched category id"
+								},
+								{
+									"key": "username",
+									"value": "sunt nostrud ex dolor",
+									"description": "limit the poll list to matched poll username/creator"
+								}
+							]
+						},
+						"description": "returns a list of polls"
+					},
+					"response": [
+						{
+							"name": "successfully return a list of polls",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/polls?categoryId=sunt nostrud ex dolor&username=sunt nostrud ex dolor",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"polls"
+									],
+									"query": [
+										{
+											"key": "categoryId",
+											"value": "sunt nostrud ex dolor"
+										},
+										{
+											"key": "username",
+											"value": "sunt nostrud ex dolor"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"question_text\": \"c\",\n    \"choices\": [\n      {\n        \"choice_text\": \"ex in\",\n        \"votes\": [\n          [\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          [\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ]\n        ]\n      },\n      {\n        \"choice_text\": \"cupidatat in\",\n        \"votes\": [\n          [\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          [\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ]\n        ]\n      }\n    ],\n    \"category\": {\n      \"name\": \"veniam dolore reprehenderit sint in\",\n      \"_id\": \"eiusmod aliquip Excepteu\",\n      \"parent\": \"nulla fugiat\",\n      \"subcategories\": [\n        {\n          \"categoryId\": \"adipisicing\"\n        },\n        {\n          \"categoryId\": \"esse non ad pariatur\"\n        }\n      ]\n    }\n  },\n  {\n    \"question_text\": \"Ut dolore\",\n    \"choices\": [\n      {\n        \"choice_text\": \"non\",\n        \"votes\": [\n          [\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          [\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ]\n        ]\n      },\n      {\n        \"choice_text\": \"sed fugiat magna\",\n        \"votes\": [\n          [\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          [\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"user\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"date\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ]\n        ]\n      }\n    ],\n    \"category\": {\n      \"name\": \"exercitation ullamco cillum\",\n      \"_id\": \"dolor ea quis commodo\",\n      \"parent\": \"in aliqua do i\",\n      \"subcategories\": [\n        {\n          \"categoryId\": \"eiusmod ullamco reprehenderit elit\"\n        },\n        {\n          \"categoryId\": \"nostrud labore aliquip \"\n        }\n      ]\n    }\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "/polls",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question_text\": \"ullamco voluptate\",\n  \"category\": \"fugiat\",\n  \"choices\": [\n    \"eiusmod in quis\",\n    \"lab\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/polls",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls"
+							]
+						},
+						"description": "To add new poll"
+					},
+					"response": [
+						{
+							"name": "Successfully created a new poll",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"question_text\": \"officia dolor\",\n  \"category\": \"aute adipisicing sit\",\n  \"choices\": [\n    \"aliquip mollit\",\n    \"quis nisi\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/api/polls",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"polls"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"tempor ullamco veniam\"\n}"
+						},
+						{
+							"name": "Invalid request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"question_text\": \"officia dolor\",\n  \"category\": \"aute adipisicing sit\",\n  \"choices\": [\n    \"aliquip mollit\",\n    \"quis nisi\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/polls",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"polls"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"do ex\"\n}"
+						}
+					]
+				},
+				{
+					"name": "/polls",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/polls",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls"
+							]
+						},
+						"description": "Not allow operation"
+					},
+					"response": [
+						{
+							"name": "METHOD_NOT_ALLOWED",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/polls",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"polls"
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "/polls",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/polls",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"polls"
+							]
+						},
+						"description": "Not allow operation"
+					},
+					"response": [
+						{
+							"name": "METHOD_NOT_ALLOWED",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/polls",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"polls"
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "categories",
+			"item": [
+				{
+					"name": "/categories",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Duis dolore\",\n  \"parent\": \"sed aute ut incididunt Excepteur\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Create a new category"
+					},
+					"response": [
+						{
+							"name": "Category Successfully Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Duis dolore\",\n  \"parent\": \"sed aute ut incididunt Excepteur\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/api/categories",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"categories"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"tempor ullamco veniam\"\n}"
+						},
+						{
+							"name": "Invalid request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Duis dolore\",\n  \"parent\": \"sed aute ut incididunt Excepteur\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"do ex\"\n}"
+						}
+					]
+				},
+				{
+					"name": "/categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Return all categories"
+					},
+					"response": [
+						{
+							"name": "Successfully retrieved all Categories",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/categories",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"categories"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"name\": \"officia\",\n    \"_id\": \"irure par\",\n    \"parent\": \"reprehenderit deserunt ad\",\n    \"subcategories\": [\n      {\n        \"categoryId\": \"velit veniam labo\"\n      },\n      {\n        \"categoryId\": \"consectetur eiusmod fugiat\"\n      }\n    ]\n  },\n  {\n    \"name\": \"qui sed esse labore do\",\n    \"_id\": \"mollit sunt ipsum\",\n    \"parent\": \"in magna\",\n    \"subcategories\": [\n      {\n        \"categoryId\": \"Duis ad culpa officia velit\"\n      },\n      {\n        \"categoryId\": \"a\"\n      }\n    ]\n  }\n]"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "localhost:3000/api",
+			"type": "string"
+		}
+	]
+}
