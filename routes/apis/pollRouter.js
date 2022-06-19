@@ -11,7 +11,7 @@ const _404Error = require('../../components/responses/404Error');
 const router = express.Router();
 router.route('/')
 .get((req, res)=>{
-  Question.find({}).populate('category')
+  Question.find({}).populate('category').populate('user')
   .then((questions)=>{
     Promise.all(questions.map( async (question)=>{
       const choices = await Choice.find({ question:question })

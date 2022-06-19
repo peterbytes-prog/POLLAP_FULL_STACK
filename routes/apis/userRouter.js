@@ -1,9 +1,27 @@
 const express = require('express');
 const router =  express.Router();
 const passport = require('passport');
+const _404Error = require('../../components/responses/404Error');
 const authenticate = require('../../middlewares/api/authenticate');
 const User = require("../../models/user.js");
 
+router.get("/checkJwtToken", (req, res)=>{
+  passport.authenticate('jwt', {session:false}, (err, user, next)=>{
+      if(err){
+        return _404Error(req,res, err);
+      }
+      if(!user){
+        res.statusCode = 401
+        res.setHeader('Content-Type', 'application/json')
+        return res.json({message: 'jwt invalid'})
+      }
+      else{
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json')
+        return res.json({message: 'jwt valid', user:user})
+      }
+  })(req, res);
+})
 router.get("/", async (req, res)=>{
   User.findById(req.body.id)
     .then((user)=>{
@@ -100,8 +118,7 @@ router.post("/create", (req, res)=>{
                 new User({username:req.body.username}),
                 req.body.password, (err, user)=>{
                     if(err){
-                        res.statusCode = 400
-                        return res.send("Error can create user "+err.message);
+                        return _404Error(req,res, err);
                     }else{
 
                       passport.authenticate('local')(req, res, ()=>{

@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require("./middlewares/cors");
 const bcrypt = require('bcrypt');
 const expressSession = require('express-session');
 const path = require('path');
@@ -17,6 +18,7 @@ app.set('view engine', 'ejs');
 //   secret: 'pollapp123'
 // }))
 // app.use(express.bodyParser());
+app.use('*', cors.cors);
 app.use(express.json());
 app.use(express.urlencoded())
 app.use(express.static('public'));
