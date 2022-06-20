@@ -31,6 +31,10 @@ const Choice = mongoose.model('Choice', ChoiceSchema);
 
 
 const QuestionSchema = new Schema({
+    trending: {
+      type: Boolean,
+      default: false
+    },
     question_text:{
       type:String,
       required:true,
