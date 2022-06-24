@@ -8,31 +8,68 @@ const _404Error = require('../../components/responses/404Error');
 
 
 
+
 const router = express.Router();
 router.route('/')
 .get((req, res)=>{
-  Question.find({}).populate('category').populate('user')
+  Question
+  .aggregate([
+      {
+        '$lookup': {
+          'from': 'choices',
+          'localField': '_id',
+          'foreignField': 'question',
+          'as': 'choices'
+        }
+      },
+      {
+        '$lookup': {
+          'from': 'profiles',
+          'localField': 'user',
+          'foreignField': 'user',
+          'as': 'profile'
+        }
+      },
+      {
+        '$addFields': {
+          'votes': {
+            '$reduce': {
+              'input': '$choices',
+              'initialValue': [],
+              'in': {
+                '$concatArrays': [
+                  '$$value', '$$this.votes'
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        $sort: {
+          'createdAt': -1
+        }
+      }
+    ])
   .then((questions)=>{
-    Promise.all(questions.map( async (question)=>{
-      const choices = await Choice.find({ question:question })
-      return {...question._doc, 'choices':choices}
-    }))
-    .then((data)=>{
-      res.statusCode = 200
-      res.setHeader('Content-Type', 'application/json');
-      return res.json(data)
+      Question.populate(questions, [{path:'user'},{path:'category'}])
+      .then((qs)=>{
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json');
+        return res.json(qs)
+      }, (err)=>{
+        return _404Error(req,res, err);
+      })
+      .catch((err)=>{
+        return _404Error(req,res, err);
+      })
+
     }, (err)=>{
       return _404Error(req,res, err);
     })
     .catch((err)=>{
       return _404Error(req,res, err);
     })
-  }, (err)=>{
-    return _404Error(req,res, err);
-  })
-  .catch((err)=>{
-    return _404Error(req,res, err);
-  })
 
 })
 .put((req, res)=>{
@@ -124,16 +161,13 @@ router.route('/:pollId')
         res.setHeader('Content-Type', 'application/json');
         return res.json(question)
       }, (err)=>{
-        return _404Error(req,res, err);
+        throw err;
       })
     .catch((err)=>{
-      return _404Error(req,res, err);
+        return _404Error(req,res, err);
       })
-    res.statusCode = 201
-    res.setHeader('Content-Type', 'application/json');
-    return res.json(question);
   }, (err)=>{
-    return _404Error(req,res, err);
+    throw err
   })
   .catch((err)=>{
     return _404Error(req,res, err);

@@ -3,6 +3,7 @@ const cors = require("./middlewares/cors");
 const bcrypt = require('bcrypt');
 const expressSession = require('express-session');
 const path = require('path');
+const fileUpload = require('express-fileupload');
 const mongoose = require('mongoose');
 const fs = require('fs');
 var passport = require('passport');
@@ -20,7 +21,8 @@ app.set('view engine', 'ejs');
 // app.use(express.bodyParser());
 app.use('*', cors.cors);
 app.use(express.json());
-app.use(express.urlencoded())
+app.use(express.urlencoded());
+app.use(fileUpload());
 app.use(express.static('public'));
 
 app.use(passport.initialize());
@@ -49,7 +51,6 @@ app.listen(3000, ()=>{
   console.log("App Listening on port 3000");
 });
 app.get("/", (req, res)=>{
-  console.log('home list');
   res.render('index');
 });
 

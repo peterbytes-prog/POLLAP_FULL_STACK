@@ -17,8 +17,8 @@ router.get('/', async (req, res)=>{
       questions[q].votes_count = q_vote_count;
     }
     res.render('polls/list', {questions});
-  }, (err)=>{console.log(err)})
-  .catch((err)=>{console.log(err)})
+  }, (err)=>{console.log(err); throw err})
+  .catch((err)=>{console.log(err); throw err})
 
 });
 
@@ -33,8 +33,8 @@ router.get('/delete/:id', authenticators.loginRequired, authenticators.isPollOwn
       }
       question.votes_count = q_vote_count;
       res.render('polls/delete', {question});
-  }, (err)=>{console.log(err)})
-  .catch((err)=>{console.log(err)})
+  }, (err)=>{console.log(err); throw err})
+  .catch((err)=>{console.log(err); throw err})
 
 });
 
@@ -44,10 +44,10 @@ router.post('/delete/:id', authenticators.loginRequired, authenticators.isPollOw
       question.remove()
       .then((question)=>{
         res.redirect('/polls');
-      }, (err)=>console.log(err))
+      }, (err)=>{console.log(err); throw err})
 
-  }, (err)=>{console.log(err)})
-  .catch((err)=>{console.log(err)})
+  }, (err)=>{console.log(err); throw err})
+  .catch((err)=>{console.log(err); throw err})
 
 });
 
@@ -60,7 +60,7 @@ router
 
 router.post('/edit/:id', authenticators.loginRequired, authenticators.isPollOwner , async (req, res)=>{
 
-  console.log(req.body);
+
   const question = await Question.findById(req.params.id).populate('choices');
   let to_remove = [];
   let query = [];
@@ -111,11 +111,11 @@ router.post('/edit/:id', authenticators.loginRequired, authenticators.isPollOwne
       question.save()
       .then((question)=>{
         res.render('polls/edit', { question })
-      }, (err)=>console.error(err))
+      }, (err)=>{console.error(err); throw err})
     }else{
       res.render('polls/edit', { question })
     }
-  }, (err)=>{console.log(err)});
+  }, (err)=>{console.log(err); throw err});
 
 })
 
@@ -144,9 +144,10 @@ router.post('/details/:id', authenticators.loginRequired, async (req, res)=>{
           (question) => { res.redirect(`/polls/details/${req.params.id}`)},
           (err) => {
                       console.log(err);
+                      throw err;
                   }
   )
-  .catch((err) => console.log(err) )
+  .catch((err) => {console.log(err); throw err} )
 
 });
 
@@ -178,10 +179,11 @@ router.post('/create',authenticators.loginRequired, async (req, res)=>{
         question.save()
         .then((question)=>{
           res.redirect('/polls');
-        }, (err)=>{console.log(err)})
+        }, (err)=>{console.log(err); throw err})
       })
       .catch((err)=>{
         console.log(err);
+        throw err;
       })
     }
 });

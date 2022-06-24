@@ -11,6 +11,7 @@ const VoteSchema = new Schema({
   },
 
 },{timestamps: true });
+
 const Vote = mongoose.model("Vote", VoteSchema);
 
 const ChoiceSchema = new Schema({
@@ -56,7 +57,10 @@ QuestionSchema.pre('remove', function(next){
   Choice.deleteMany({question:this})
   .then((choices)=>{
     next();
-  },(err)=>console.log(err))
+  },(err)=>{console.log(err); throw err})
+});
+QuestionSchema.pre('find', function(){
+  this.populate('user').populate('category')
 });
 const Question = mongoose.model('Question', QuestionSchema);
 

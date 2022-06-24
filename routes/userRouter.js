@@ -10,7 +10,6 @@ const User = require("../models/user.js");
 // );
 
 router.get("/", async (req, res)=>{
-  console.log("User List");
   const users = await User.find({});
   res.render('users/list', { users });
 });
@@ -53,10 +52,6 @@ router.post("/create", async (req, res)=>{
   data.email = req.body.email;
   data.username = req.body.username;
   data.password = req.body.password1;
-  data.gender = req.body.gender;
-  data.firstname = req.body.firstname;
-  data.lastname = req.body.lastname;
-  data.age = req.body.age;
   if ((data.username)
       && (req.body.password1)
       && (req.body.password1 === req.body.password2)
