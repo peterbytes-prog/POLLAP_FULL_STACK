@@ -126,24 +126,27 @@ router.route('/profile/:id')
 })
 .put(authenticate.verifyUser, async (req, res)=>{
   let data = req.body;
-  if(req.files.image){
+  if(req.files && req.files.image){
     const fl_path = (path.resolve(__dirname,"..","..",'public/images/profiles',(req.user.id).toString())).toString()+(path.extname(req.files.image.name));
     const image = await createImageFile(req.files.image, fl_path)
     data['image'] = '/images/profiles/'+(req.user.id).toString()+(path.extname(image.name)).toString();
   }
-  if(req.files.backgroundImage){
+  if(req.files && req.files.backgroundImage){
     const bg_file = (path.resolve(__dirname,"..","..",'public/images/backgrounds',(req.user.id).toString())).toString()+(path.extname(req.files.backgroundImage.name));
     const bgImage = await createImageFile(req.files.backgroundImage, bg_file)
     data['backgroundImage'] = '/images/backgrounds/'+(req.user.id).toString()+(path.extname(bgImage.name)).toString();
   }
   UpdateProfile(req, data)
   .then((profile)=>{
+      console.log('A')
       res.statusCode = 200;
       res.send({profile:profile})
   }, (err)=>{
+    console.log('B')
      _404Error(req,res, err);
   })
   .catch((err)=>{
+    console.log('C')
       _404Error(req,res, err);
   })
 })
